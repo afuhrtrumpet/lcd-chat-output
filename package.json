@@ -1,0 +1,12 @@
+{
+	"name": "LCDChatOutput",
+	"version": "0.0.0",
+	"description": "Outputs user messages to the raspberry pi's LCD.",
+	"dependencies": {
+		"socket.io": "latest",
+		"express": "latest",
+		"jade": "latest",
+		"lcd": "latest"
+	},
+	"author": "Alex Fuhr"
+}
