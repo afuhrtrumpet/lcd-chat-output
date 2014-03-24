@@ -17,12 +17,14 @@ app.use(express.static(__dirname + '/public'));
 var io = require('socket.io').listen(app.listen(port));
 
 var upButton = { PIN : 18, GPIO : null };
-var downButton = { PIN : 4, GPIO : null};
+var downButton = { PIN : 4, GPIO : null };
 
-var messages = [""];
+var messages = new Array();
+messages[0] = "";
 var index = 0;
 
 var printMessage = function() {
+	console.log("Printing message at index " + index);
 	message = messages[index]
 	lcd.clear();
 	lcd.once('clear', function() {
@@ -50,19 +52,29 @@ io.sockets.on('connection', function(socket) {
 	upButton.GPIO = new Gpio(upButton.PIN, 'in', 'both');
 	downButton.GPIO = new Gpio(downButton.PIN, 'in', 'both');
 	upButton.GPIO.watch(function(err, val) {
-		if (err) throw err;
-		if (index < 0) {
+		console.log("Up button pressed");
+		if (err) {
+			console.log(err);
+			throw err;
+		}
+		if (index > 0 && !val) {
+			console.log("Printing new message");
 			index--;
 			printMessage();
 		}
-	}
+	});
 	downButton.GPIO.watch(function(err, val) {
-		if (err) throw err;
-		if (index < messages.length + 1) {
+		console.log("Down button pressed");
+		if (err) {
+			console.log(err);
+			throw err;
+		}
+		if (index < messages.length - 1 && !val) {
+			console.log("Printing new message");
 			index++;
 			printMessage();
-		}
-	}
+		} 
+	});
 });
 
 console.log("Listening on port " + port);
